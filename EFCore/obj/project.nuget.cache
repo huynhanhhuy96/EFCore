@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "yuH3Q8eKyNuZ0sMmawA8z0ffnTBpEx0LOAs9bL/ZB3lt308S6cXyYao01C0ccCqXbl1NIjhucGDrXZx/q/qzuA==",
+  "dgSpecHash": "DJiMrjQYCQFrrecvsBrnKT6McPBVggdnUa25WrsB9MF45aAEG1blupUmj3jnT31LeG6h03HlcoGnN/dfgEry2Q==",
   "success": true,
-  "projectFilePath": "D:\\Dev\\GitHub\\EFCore\\EFCore.csproj",
+  "projectFilePath": "D:\\Dev\\GitHub\\EFCore\\EFCore\\EFCore.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\rinng\\.nuget\\packages\\castle.core\\4.4.1\\castle.core.4.4.1.nupkg.sha512",
     "C:\\Users\\rinng\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",

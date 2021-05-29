@@ -7595,11 +7595,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Dev\\GitHub\\EFCore\\EFCore.csproj",
+      "projectUniqueName": "D:\\Dev\\GitHub\\EFCore\\EFCore\\EFCore.csproj",
       "projectName": "EFCore",
-      "projectPath": "D:\\Dev\\GitHub\\EFCore\\EFCore.csproj",
+      "projectPath": "D:\\Dev\\GitHub\\EFCore\\EFCore\\EFCore.csproj",
       "packagesPath": "C:\\Users\\rinng\\.nuget\\packages\\",
-      "outputPath": "D:\\Dev\\GitHub\\EFCore\\obj\\",
+      "outputPath": "D:\\Dev\\GitHub\\EFCore\\EFCore\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\rinng\\AppData\\Roaming\\NuGet\\NuGet.Config",
