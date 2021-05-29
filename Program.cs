@@ -13,21 +13,73 @@
             Database -> SQL server: EFCore, DbContext
             -- product */
 
-            // CreateDatabase();
             // DropDatabase();
+            // CreateDatabase();
 
-            // -- Insert, Select, Update, Delete -> CRUD
+            // InsertData();
+
+            #region Insert, Select, Update, Delete -> CRUD
             // InsertProduct();
             // ReadProduct();
             // RenameProduct(id: 2, newName: "Laptop");
             // DeleteProduct(id: 3);
+            #endregion
 
             // -- Logging
+
+            #region Select
+            /*
+            using var dbcontext = new ShopContext();
+            // var product = (from p in dbcontext.products where p.ProductId == 3 select p).FirstOrDefault();
+            var product = dbcontext.products.Select(x => x).Where(x => x.ProductId == 3).FirstOrDefault();
+            var e = dbcontext.Entry(product);
+            e.Reference(p => p.Category).Load();
+            
+            product.PrintInfo();
+
+            if (product.Category != null)
+            {
+                Console.WriteLine($"{product.Category.CategoryName} - {product.Category.Description}");
+            }
+            else Console.WriteLine("Category == null");
+            */
+
+            // using var dbcontext = new ShopContext();
+
+            // var category = dbcontext.categories.Select(x => x).Where(x => x.CategoryId == 2).FirstOrDefault();
+            // Console.WriteLine($"{category.CategoryId} - {category.CategoryName}");
+
+            // if (category.Products != null)
+            // {
+            //     Console.WriteLine($"So san pham: {category.Products.Count()}");
+            //     category.Products.ForEach(x => x.PrintInfo());
+            // }
+            // else Console.WriteLine("Products == null");
+            #endregion
+
+            #region Linq test
+            using var dbcontext = new ShopContext();
+
+            // dbcontext.products.Find(6).PrintInfo();
+
+            // dbcontext.products.Where(x => x.Price >= 500).ToList().ForEach(x => x.PrintInfo());
+
+            // dbcontext.products.Where(x => x.ProductName.Contains("i")).OrderByDescending(x => x.Price).ToList().ForEach(x => x.PrintInfo());
+
+            // dbcontext.products.Where(x => x.ProductName.Contains("i")).OrderBy(x => x.Price).Take(2).ToList().ForEach(x => x.PrintInfo());
+
+            dbcontext.products.Join(dbcontext.categories, x => x.CateId, c => c.CategoryId, (x, c) => new
+            {
+                ten = x.ProductName,
+                danhmuc = c.CategoryName,
+                gia = x.Price
+            }).ToList().ForEach(x => Console.WriteLine(x));
+            #endregion
         }
 
         static void CreateDatabase()
         {
-            using var dbcontext = new ProductDbContext();
+            using var dbcontext = new ShopContext();
             string dbname = dbcontext.Database.GetDbConnection().Database;
 
             var result = dbcontext.Database.EnsureCreated();
@@ -40,7 +92,7 @@
 
         static void DropDatabase()
         {
-            using var dbcontext = new ProductDbContext();
+            using var dbcontext = new ShopContext();
             string dbname = dbcontext.Database.GetDbConnection().Database;
 
             var result = dbcontext.Database.EnsureDeleted();
@@ -51,101 +103,28 @@
                 Console.WriteLine($"Khong Xoa duoc {dbname}");
         }
 
-        static void InsertProduct()
+        static void InsertData()
         {
-            using var dbcontext = new ProductDbContext();
+            using var dbcontext = new ShopContext();
 
-            /*
-            - Model (Product)
-            - Add, AddAysc
-            - SaveChange
-            */
+            Category c1 = new Category() { CategoryName = "Dien thoai", Description = "Cac loai dien thoai" };
+            Category c2 = new Category() { CategoryName = "Do uong", Description = "Cac loai do uong" };
 
-            /*
-            // Add Product
-            var p1 = new Product();
-            p1.ProductName = "San pham 1";
-            p1.Provider = "Cong ty 1";
+            dbcontext.categories.Add(c1);
+            dbcontext.categories.Add(c2);
 
-            dbcontext.Add(p1);
-            */
+            // var c1 = (from c in dbcontext.categories where c.CategoryId == 1 select c).FirstOrDefault();
+            // var c2 = (from c in dbcontext.categories where c.CategoryId == 2 select c).FirstOrDefault();
 
-            // Add multi Product
-            var product = new Product[]{
-                new Product() {ProductName ="San pham 1", Provider = "CTY A"},
-                new Product() {ProductName ="San pham 2", Provider = "CTY B"},
-                new Product() {ProductName ="San pham 3", Provider = "CTY C"},
-            };
+            dbcontext.Add(new Product() { ProductName = "Iphone X", Price = 1000, CateId = 1 });
+            dbcontext.Add(new Product() { ProductName = "Samsung", Price = 900, Category = c1 });
+            dbcontext.Add(new Product() { ProductName = "Ruou vang Abc", Price = 500, Category = c2 });
+            dbcontext.Add(new Product() { ProductName = "Nokia Xyz", Price = 600, Category = c1 });
+            dbcontext.Add(new Product() { ProductName = "Cafe Abc", Price = 100, Category = c2 });
+            dbcontext.Add(new Product() { ProductName = "Nuoc ngot", Price = 50, Category = c2 });
+            dbcontext.Add(new Product() { ProductName = "Bia", Price = 200, Category = c2 });
 
-            dbcontext.AddRange(product);
-
-            int numberRows = dbcontext.SaveChanges();
-            Console.WriteLine($"Da chen {numberRows} du lieu");
-        }
-
-        static void ReadProduct()
-        {
-            using var dbcontext = new ProductDbContext();
-
-            // Linq
-            var products = dbcontext.products.ToList();
-            products.ForEach(x => x.PrintInfo());
-
-            /*
-            var query = from Product in dbcontext.products
-                        where Product.Provider.Contains("CTY")
-                        orderby Product.ProductId descending
-                        select Product;
-
-            query.ToList().ForEach(x => x.PrintInfo());
-            */
-
-            /*
-            Product product = (from p in dbcontext.products
-                               where p.Provider == "CTY A"
-                               select p).FirstOrDefault();
-            if (product != null)
-                product.PrintInfo();
-            */
-        }
-
-        static void RenameProduct(int id, string newName)
-        {
-            using var dbcontext = new ProductDbContext();
-
-            Product product = (from p in dbcontext.products
-                               where p.ProductId == id
-                               select p).FirstOrDefault();
-
-            if (product != null)
-            {
-                /*
-                product -> DbContext
-                EntityEntry<Product> entry = dbcontext.Entry(product);
-                entry.State = EntityState.Detached;
-                */
-
-                product.ProductName = newName;
-                int numberRows = dbcontext.SaveChanges();
-                Console.WriteLine($"Cap nhap {numberRows} du lieu");
-            }
-        }
-
-        static void DeleteProduct(int id)
-        {
-            using var dbcontext = new ProductDbContext();
-
-            Product product = (from p in dbcontext.products
-                               where p.ProductId == id
-                               select p).FirstOrDefault();
-
-            if (product != null)
-            {
-                dbcontext.Remove(product);
-
-                int numberRows = dbcontext.SaveChanges();
-                Console.WriteLine($"Xoa {numberRows} du lieu");
-            }
+            dbcontext.SaveChanges();
         }
     }
 }
